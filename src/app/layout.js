@@ -7,8 +7,11 @@ import { ClerkProvider } from '@clerk/nextjs'
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Blogging Platform",
-  description: "A simple blogging platform built with Next.js, MongoDB, and Cloudinary",
+  title: "Frame & Phrase | Where Prose Finds Its Home",
+  description: "A premium blogging platform where snapshots tell stories and prose finds its tranquil home.",
+  icons: {
+    icon: "/assets/frame_phrase_favicon_v1_1771129805341.png",
+  },
 };
 
 export default function RootLayout({ children }) {
