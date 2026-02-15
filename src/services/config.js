@@ -53,9 +53,13 @@ class PostService {
         }
     }
 
-    async getPosts(status = "active") {
+    async getPosts(status = "active", userId = null) {
         try {
-            const response = await axios.get(`/api/posts?status=${status}`);
+            let url = `/api/posts?status=${status}`;
+            if (userId) {
+                url += `&userId=${userId}`;
+            }
+            const response = await axios.get(url);
             return response.data;
         } catch (error) {
             console.error("PostService :: getPosts :: error", error);

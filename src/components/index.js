@@ -12,6 +12,7 @@ import AuthLayout from "./AuthLayout";
 import Input from "./Input";
 import Select from "./Select";
 import ThemeBtn from "./ThemeBtn";
+import Landing from "./Landing";
 export {
     Header,
     Footer,
@@ -27,4 +28,5 @@ export {
     Input,
     Select,
     ThemeBtn,
+    Landing,
 }

@@ -4,17 +4,24 @@ import { Container, PostCard, AuthLayout } from '@/components'
 import postService from '@/services/config'
 import Loader from '@/components/loaders/Loader';
 
+import { useUser } from '@clerk/nextjs';
+
 function AllPostsPage() {
+    const { user } = useUser();
     const [posts, setPosts] = useState([])
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        postService.getPosts([]).then((posts) => {
-            if (posts) {
-                setPosts(posts)
-            }
-        }).finally(() => setLoading(false))
-    }, [])
+        if (user) {
+            postService.getPosts("active", user.id).then((posts) => {
+                if (posts) {
+                    setPosts(posts)
+                }
+            }).finally(() => setLoading(false))
+        } else if (!user && !loading) {
+            setLoading(false);
+        }
+    }, [user])
 
     return (
         <div className='w-full py-8'>

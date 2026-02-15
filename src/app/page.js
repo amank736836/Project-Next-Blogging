@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react'
 import postService from "@/services/config";
-import { Container, PostCard } from '@/components'
+import { Container, PostCard, Landing } from '@/components'
 import Loader from '@/components/loaders/Loader';
 
 import { useAuth } from '@clerk/nextjs';
@@ -27,6 +27,10 @@ export default function Home() {
     )
   }
 
+  if (!isSignedIn) {
+    return <Landing />;
+  }
+
   if (posts.length === 0) {
     return (
       <div className="w-full py-20 mt-4 text-center">
@@ -34,9 +38,7 @@ export default function Home() {
           <div className="flex flex-wrap">
             <div className="p-2 w-full">
               <h1 className="text-2xl font-bold hover:text-gray-500 dark:text-white">
-                {isSignedIn
-                  ? "No posts found. Be the first to write one!"
-                  : "Login to read posts or be the first to write one!"}
+                No posts found. Be the first to write one!
               </h1>
             </div>
           </div>

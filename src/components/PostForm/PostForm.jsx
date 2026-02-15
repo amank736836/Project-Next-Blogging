@@ -9,7 +9,7 @@ import Loader from "@/components/loaders/Loader";
 
 function PostForm({ post }) {
     const { user } = useUser();
-    const { register, handleSubmit, watch, setValue, control, getValues } =
+    const { register, handleSubmit, watch, setValue, control, getValues, formState: { errors } } =
         useForm({
             defaultValues: {
                 title: post?.title || "",
@@ -93,6 +93,20 @@ function PostForm({ post }) {
         };
     }, [watch, slugTransform, setValue]);
 
+    const deletePost = async () => {
+        setLoading(true);
+        try {
+            const status = await postService.deletePost(post.slug);
+            if (status) {
+                router.push("/");
+            }
+        } catch (error) {
+            console.error("PostForm :: deletePost :: error", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <form onSubmit={handleSubmit(submit)} className="flex flex-wrap p-4">
             <div className="w-full md:w-2/3 px-2">
@@ -100,18 +114,20 @@ function PostForm({ post }) {
                     label="Title:"
                     placeholder="Title"
                     className="mb-4"
-                    {...register("title", { required: true })}
+                    {...register("title", { required: "Title is required" })}
+                    error={errors.title?.message}
                 />
                 <Input
                     label="Slug:"
                     placeholder="Slug"
                     className="mb-4"
-                    {...register("slug", { required: true })}
+                    {...register("slug", { required: "Slug is required" })}
                     onInput={(e) => {
                         setValue("slug", slugTransform(e.currentTarget.value), {
                             shouldValidate: true,
                         });
                     }}
+                    error={errors.slug?.message}
                 />
                 <RTE
                     label="Content:"
@@ -127,9 +143,10 @@ function PostForm({ post }) {
                     className="mb-4"
                     accept="image/png, image/jpeg, image/jpg, image/gif"
                     {...register("image", {
-                        required: !post,
+                        required: !post ? "Image is required" : false,
                         onChange: (e) => handleImageChange(e)
                     })}
+                    error={errors.image?.message}
                 />
                 {(imagePreview || post?.featuredImage) && (
                     <div className="w-full mb-4">
@@ -149,11 +166,22 @@ function PostForm({ post }) {
                 />
                 <Button
                     type="submit"
-                    className="w-full flex justify-center items-center"
+                    className="w-full flex justify-center items-center mb-4"
                     disabled={loading}
                 >
                     {loading ? <Loader /> : post ? "Update" : "Submit"}
                 </Button>
+
+                {post && (
+                    <Button
+                        type="button"
+                        onClick={deletePost}
+                        className="w-full flex justify-center items-center bg-red-600 hover:bg-red-700"
+                        disabled={loading}
+                    >
+                        Delete Post
+                    </Button>
+                )}
             </div>
         </form>
     );

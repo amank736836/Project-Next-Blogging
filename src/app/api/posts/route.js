@@ -7,9 +7,14 @@ export async function GET(request) {
         await dbConnect();
         const { searchParams } = new URL(request.url);
         const status = searchParams.get("status") || "active";
+        const userId = searchParams.get("userId");
 
-        // In Appwrite Query.equal("status", "active") resulted in filtered list
-        const posts = await Post.find({ status });
+        const query = { status };
+        if (userId) {
+            query.userId = userId;
+        }
+
+        const posts = await Post.find(query);
         return NextResponse.json(posts);
     } catch (error) {
         return NextResponse.json({ error: error.message }, { status: 500 });
