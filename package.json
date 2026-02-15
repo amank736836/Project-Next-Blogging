@@ -9,9 +9,22 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@clerk/nextjs": "^6.37.4",
+    "@reduxjs/toolkit": "^2.11.2",
+    "@tinymce/tinymce-react": "^6.3.0",
+    "axios": "^1.13.5",
+    "cloudinary": "^2.9.0",
+    "firebase": "^12.9.0",
+    "firebase-admin": "^13.6.1",
+    "html-react-parser": "^5.2.17",
+    "lucide-react": "^0.564.0",
+    "mongoose": "^9.2.1",
     "next": "16.1.6",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "react-hook-form": "^7.71.1",
+    "react-redux": "^9.2.0",
+    "validator": "^13.15.26"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
