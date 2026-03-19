@@ -3,6 +3,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/hooks/theme-context";
 import { Header, Footer } from "@/components";
 import { ClerkProvider } from '@clerk/nextjs'
+import { Analytics } from '@vercel/analytics/next';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,6 +29,7 @@ export default function RootLayout({ children }) {
               <Footer />
             </div>
           </ThemeProvider>
+          <Analytics />
         </body>
       </html>
     </ClerkProvider>
