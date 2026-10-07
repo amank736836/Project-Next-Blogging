@@ -1,0 +1,8 @@
+{
+  "title": "A harness-authored frame",
+  "slug": "a-harness-authored-frame",
+  "content": "<p>Written by the automated harness.</p>",
+  "featuredImage": "https://res.cloudinary.com/harness/image/upload/v1/blog_posts/harness.jpg",
+  "status": "inactive",
+  "userId": "user_harness_alice"
+}
