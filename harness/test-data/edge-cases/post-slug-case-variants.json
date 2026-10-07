@@ -1,0 +1,34 @@
+[
+  {
+    "title": "Case variant 1",
+    "slug": "  My-Slug  ",
+    "content": "<p>Written by the automated harness.</p>",
+    "featuredImage": "https://res.cloudinary.com/harness/image/upload/v1/blog_posts/harness.jpg",
+    "status": "inactive",
+    "userId": "user_harness_alice"
+  },
+  {
+    "title": "Case variant 2",
+    "slug": "My-Slug",
+    "content": "<p>Written by the automated harness.</p>",
+    "featuredImage": "https://res.cloudinary.com/harness/image/upload/v1/blog_posts/harness.jpg",
+    "status": "inactive",
+    "userId": "user_harness_alice"
+  },
+  {
+    "title": "Case variant 3",
+    "slug": "my-slug",
+    "content": "<p>Written by the automated harness.</p>",
+    "featuredImage": "https://res.cloudinary.com/harness/image/upload/v1/blog_posts/harness.jpg",
+    "status": "inactive",
+    "userId": "user_harness_alice"
+  },
+  {
+    "title": "Case variant 4",
+    "slug": "MY-SLUG",
+    "content": "<p>Written by the automated harness.</p>",
+    "featuredImage": "https://res.cloudinary.com/harness/image/upload/v1/blog_posts/harness.jpg",
+    "status": "inactive",
+    "userId": "user_harness_alice"
+  }
+]

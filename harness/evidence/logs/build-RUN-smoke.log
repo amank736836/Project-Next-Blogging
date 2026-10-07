@@ -1,0 +1,43 @@
+
+> blog-next@0.1.0 build
+> next build
+
+▲ Next.js 16.1.6 (Turbopack)
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 10.3s
+  Running TypeScript ...
+  Collecting page data using 1 worker ...
+  Generating static pages using 1 worker (0/16) ...
+  Generating static pages using 1 worker (4/16) 
+  Generating static pages using 1 worker (8/16) 
+  Generating static pages using 1 worker (12/16) 
+✓ Generating static pages using 1 worker (16/16) in 422.2ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /add-post
+├ ○ /all-posts
+├ ƒ /api/posts
+├ ƒ /api/posts/[slug]
+├ ƒ /api/upload
+├ ○ /contact
+├ ○ /demo
+├ ƒ /edit-post/[slug]
+├ ○ /features
+├ ○ /icon.png
+├ ○ /login
+├ ƒ /post/[slug]
+├ ○ /pricing
+├ ○ /privacy
+├ ○ /signup
+└ ○ /terms
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

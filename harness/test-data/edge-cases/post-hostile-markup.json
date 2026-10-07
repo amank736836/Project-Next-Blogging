@@ -1,0 +1,8 @@
+{
+  "title": "<img src=x onerror=alert(1)>",
+  "slug": "hostile-markup",
+  "content": "<p>Safe paragraph.</p><script>document.title = \"pwned\"</script><img src=x onerror=\"fetch(String.fromCharCode(47,97,112,105))\">",
+  "featuredImage": "https://res.cloudinary.com/harness/image/upload/v1/blog_posts/harness.jpg",
+  "status": "inactive",
+  "userId": "user_harness_alice"
+}
