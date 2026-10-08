@@ -6,7 +6,7 @@
 | Title | The Drafts tab on `/all-posts` is always empty |
 | Severity | Major |
 | Priority | P1 |
-| Status | OPEN |
+| Status | RESOLVED |
 | Feature | [FEAT-006](../../features/FEAT-006-my-shelf/README.md) |
 | Requirement | REQ-028 — **VIOLATED** |
 | Reproducible | ALWAYS (code-verified; the page is at 0% coverage) |

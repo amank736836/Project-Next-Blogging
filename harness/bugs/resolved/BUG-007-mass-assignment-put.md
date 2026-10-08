@@ -6,7 +6,7 @@
 | Title | `PUT` has no field allow-list and does not run validators |
 | Severity | High |
 | Priority | P1 |
-| Status | OPEN |
+| Status | RESOLVED |
 | Feature | [FEAT-002](../../features/FEAT-002-post-crud/README.md) |
 | Requirement | REQ-025 — **VIOLATED** |
 | Reproducible | ALWAYS |

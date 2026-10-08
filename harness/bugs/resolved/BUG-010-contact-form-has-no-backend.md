@@ -6,7 +6,7 @@
 | Title | The contact form reports success and sends nothing |
 | Severity | Medium |
 | Priority | P2 |
-| Status | OPEN |
+| Status | RESOLVED |
 | Feature | [FEAT-008](../../features/FEAT-008-contact-form/README.md) |
 | Requirement | REQ-017 — **VIOLATED** |
 | Reproducible | ALWAYS |

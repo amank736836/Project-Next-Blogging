@@ -6,7 +6,7 @@
 | Title | The byline shows the reader as the author |
 | Severity | Major |
 | Priority | P2 |
-| Status | OPEN |
+| Status | RESOLVED |
 | Feature | [FEAT-004](../../features/FEAT-004-article-reader/README.md) |
 | Requirement | REQ-027 — **VIOLATED** |
 | Reproducible | ALWAYS (code-verified; the page is at 0% coverage) |

@@ -6,7 +6,7 @@
 | Title | `db.js` throws at import without `MONGO_URI`, so the build fails |
 | Severity | Medium |
 | Priority | P3 |
-| Status | OPEN |
+| Status | RESOLVED |
 | Feature | infrastructure |
 | Requirement | REQ-NF-01 — **VIOLATED** |
 | Reproducible | ALWAYS |

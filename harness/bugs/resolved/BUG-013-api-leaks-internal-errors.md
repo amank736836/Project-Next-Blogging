@@ -6,7 +6,7 @@
 | Title | 500 responses echo the raw driver error to the client |
 | Severity | Medium |
 | Priority | P2 |
-| Status | OPEN |
+| Status | RESOLVED |
 | Feature | [FEAT-002](../../features/FEAT-002-post-crud/README.md), [FEAT-005](../../features/FEAT-005-image-upload/README.md) |
 | Requirement | REQ-NF-02, REQ-025 — **VIOLATED** |
 | Reproducible | ALWAYS |

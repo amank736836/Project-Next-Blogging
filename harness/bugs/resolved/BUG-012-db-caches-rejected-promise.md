@@ -6,7 +6,7 @@
 | Title | A rejected database connection is cached forever |
 | Severity | Medium |
 | Priority | P2 |
-| Status | OPEN |
+| Status | RESOLVED |
 | Feature | infrastructure |
 | Requirement | REQ-NF-02 — **VIOLATED** |
 | Reproducible | ALWAYS (code-verified; `src/lib/db.js` is at 0% coverage) |

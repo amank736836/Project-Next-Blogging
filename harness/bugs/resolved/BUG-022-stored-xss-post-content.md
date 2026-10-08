@@ -6,7 +6,7 @@
 | Title | Post content is rendered unsanitised — stored XSS |
 | Severity | High |
 | Priority | P1 |
-| Status | OPEN |
+| Status | RESOLVED |
 | Feature | [FEAT-004](../../features/FEAT-004-article-reader/README.md) |
 | Requirement | REQ-025 — **VIOLATED** |
 | Reproducible | ALWAYS (storage proven); browser execution **NOT_EXECUTED** |

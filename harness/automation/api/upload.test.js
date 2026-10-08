@@ -1,9 +1,13 @@
 /**
  * API-003 · POST /api/upload — Cloudinary image upload.
  *
- * Code under test : src/app/api/upload/route.js (real, unmodified)
+ * Code under test : src/app/api/upload/route.js
  * Replaced        : @/lib/cloudinary (no real network calls, no real account)
+ *                   and @clerk/nextjs/server (auth)
  * Traceability: REQ-010 / FEAT-005 / SCN-API-15..17, SCN-SEC-08
+ *
+ * BUG-008 fix: server now validates MIME type, size, and auth.
+ * BUG-016 fix: non-multipart requests return 415 instead of 500.
  */
 // @vitest-environment node
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -13,9 +17,6 @@ const uploadStream = vi.fn();
 vi.mock('@/lib/cloudinary', () => ({
   default: {
     uploader: {
-      // Emulates cloudinary.uploader.upload_stream(opts, cb).end(buffer).
-      // Each test replaces `uploadStream`'s implementation via willSucceed /
-      // willFail below so no real network call is ever made.
       upload_stream: (...args) => {
         const stream = uploadStream(...args);
         return stream ?? { end: () => undefined };
@@ -24,10 +25,16 @@ vi.mock('@/lib/cloudinary', () => ({
   },
 }));
 
+// Mock @clerk/nextjs/server for auth checks.
+const mockAuth = vi.fn();
+vi.mock('@clerk/nextjs/server', () => ({
+  auth: (...args) => mockAuth(...args),
+  clerkMiddleware: vi.fn(() => vi.fn()),
+}));
+
 const { POST } = await import('@/app/api/upload/route.js');
 const { fileFormData } = await import('@harness/automation/utilities/request');
 
-/** Resolve the pending upload as Cloudinary would. */
 function willSucceed(publicId = 'blog_posts/harness_frame') {
   uploadStream.mockImplementation((options, callback) => {
     callback(null, {
@@ -48,6 +55,9 @@ function willFail(message = 'Invalid image file') {
 
 beforeEach(() => {
   uploadStream.mockReset();
+  mockAuth.mockReset();
+  // Default: authenticated user.
+  mockAuth.mockResolvedValue({ userId: 'user_harness_alice' });
 });
 
 describe('POST /api/upload', () => {
@@ -78,7 +88,7 @@ describe('POST /api/upload', () => {
   });
 
   it('TC-API-014 answers 400 with { error: "No file provided" } when the part is absent', async () => {
-    const form = new FormData(); // deliberately empty
+    const form = new FormData();
     const response = await POST(new Request('http://harness.local/api/upload', {
       method: 'POST',
       body: form,
@@ -90,7 +100,8 @@ describe('POST /api/upload', () => {
     expect(uploadStream).not.toHaveBeenCalled();
   });
 
-  it('TC-NEG-005 surfaces a Cloudinary failure as 500 with the provider message', async () => {
+  it('TC-NEG-005 surfaces a Cloudinary failure as 500 with a generic message', async () => {
+    // BUG-013 fix: internal errors are no longer leaked to the client.
     willFail('Invalid image file');
     const response = await POST(new Request('http://harness.local/api/upload', {
       method: 'POST',
@@ -99,13 +110,11 @@ describe('POST /api/upload', () => {
     const body = await response.json();
 
     expect(response.status).toBe(500);
-    expect(body.error).toBe('Invalid image file');
+    expect(body.error).toBe('Upload failed');
   });
 
-  it('TC-SEC-008 [BUG-008] accepts ANY MIME type server-side — validation is client-only', async () => {
-    // The browser input restricts accept="image/*", but the endpoint itself
-    // never inspects the content type or size, so an arbitrary payload is
-    // forwarded to Cloudinary. Asserts current behaviour.
+  it('TC-SEC-008 [BUG-008 FIX] rejects non-image MIME types with 415', async () => {
+    // Inverted from the original regression test.
     willSucceed('blog_posts/not_an_image');
     const form = new FormData();
     form.append('file', new Blob(['#!/bin/sh\necho pwned'], { type: 'application/x-sh' }), 'payload.sh');
@@ -114,9 +123,46 @@ describe('POST /api/upload', () => {
       method: 'POST',
       body: form,
     }));
-    const body = await response.json();
 
-    expect(response.status).toBe(200);
-    expect(body.fileId).toBe('blog_posts/not_an_image');
+    expect(response.status).toBe(415);
+    expect(uploadStream).not.toHaveBeenCalled();
+  });
+
+  it('TC-SEC-008b [BUG-008 FIX] rejects files larger than 8 MB with 413', async () => {
+    const form = new FormData();
+    const bigContent = new Uint8Array(9 * 1024 * 1024); // 9 MB
+    form.append('file', new Blob([bigContent], { type: 'image/jpeg' }), 'huge.jpg');
+
+    const response = await POST(new Request('http://harness.local/api/upload', {
+      method: 'POST',
+      body: form,
+    }));
+
+    expect(response.status).toBe(413);
+    expect(uploadStream).not.toHaveBeenCalled();
+  });
+
+  it('TC-SEC-008c [BUG-008 FIX] rejects unauthenticated uploads with 401', async () => {
+    mockAuth.mockResolvedValue({ userId: null });
+    willSucceed();
+
+    const response = await POST(new Request('http://harness.local/api/upload', {
+      method: 'POST',
+      body: fileFormData(),
+    }));
+
+    expect(response.status).toBe(401);
+    expect(uploadStream).not.toHaveBeenCalled();
+  });
+
+  it('TC-SEC-016 [BUG-016 FIX] non-multipart requests return 415 instead of 500', async () => {
+    const response = await POST(new Request('http://harness.local/api/upload', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: '{}',
+    }));
+
+    expect(response.status).toBe(415);
+    expect(uploadStream).not.toHaveBeenCalled();
   });
 });

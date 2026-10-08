@@ -6,7 +6,7 @@
 | Title | The manual slug field strips every hyphen as it is typed |
 | Severity | Major |
 | Priority | P2 |
-| Status | OPEN |
+| Status | RESOLVED |
 | Feature | [FEAT-002](../../features/FEAT-002-post-crud/README.md) |
 | Requirement | REQ-015, BR-08 — **VIOLATED** |
 | Reproducible | ALWAYS |

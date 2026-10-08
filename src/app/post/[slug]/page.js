@@ -32,6 +32,15 @@ export default function PostPage({ params: paramsPromise }) {
     const { user } = useUser();
     const isAuthor = post && user ? post.userId === user.id : false;
 
+    // BUG-003 fix: resolve the byline from the post's denormalised author
+    // data first, falling back to the viewer's profile when they are the
+    // author, and finally to a generic label for anonymous readers.
+    const authorDisplayName =
+        post?.authorName ||
+        (isAuthor ? (user?.fullName || user?.username) : null) ||
+        'A writer at Frame & Phrase';
+    const authorInitial = authorDisplayName.trim().charAt(0).toUpperCase() || 'F';
+
     useEffect(() => {
         if (!slug) {
             router.push('/');
@@ -66,15 +75,23 @@ export default function PostPage({ params: paramsPromise }) {
         return () => clearTimeout(t);
     }, [copied]);
 
+    const [deleteError, setDeleteError] = useState(null);
+
+    // BUG-021 fix: add a catch block so delete failures are surfaced to the
+    // user instead of being silently swallowed.
     const deletePost = async () => {
         if (!confirming) {
             setConfirming(true);
             return;
         }
         setDeleting(true);
+        setDeleteError(null);
         try {
             const status = await postService.deletePost(post.slug);
             if (status) router.push('/');
+        } catch (error) {
+            console.error('deletePost error:', error);
+            setDeleteError('Could not delete the post. Please try again.');
         } finally {
             setDeleting(false);
             setConfirming(false);
@@ -164,10 +181,10 @@ export default function PostPage({ params: paramsPromise }) {
                     <Reveal delay={0.25} y={14} duration={0.7}>
                         <div className="mt-7 flex flex-wrap items-center gap-3">
                             <span className="grid h-9 w-9 place-items-center rounded-full bg-accent/14 font-display text-sm font-semibold text-accent">
-                                {(user?.fullName || user?.username || 'F').trim().charAt(0).toUpperCase()}
+                                {authorInitial}
                             </span>
                             <span className="text-sm font-medium text-muted">
-                                {user?.fullName || user?.username || 'A writer at Frame & Phrase'}
+                                {authorDisplayName}
                             </span>
 
                             <span aria-hidden className="mx-1 hidden h-4 w-px bg-line sm:block" />
@@ -240,6 +257,12 @@ export default function PostPage({ params: paramsPromise }) {
                         )}
                     </figure>
                 </Reveal>
+
+                {deleteError && (
+                    <div className="mx-auto mt-4 max-w-2xl rounded-lg border border-[#e5484d]/30 bg-[#e5484d]/8 px-4 py-3 text-sm text-[#e5484d]">
+                        {deleteError}
+                    </div>
+                )}
 
                 {/* -------------------------------------------------- body */}
                 <div className="prose-fp lead mx-auto mt-12 max-w-2xl">

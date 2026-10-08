@@ -6,7 +6,7 @@
 | Title | A missing `CLERK_SECRET_KEY` takes the entire site down |
 | Severity | Medium |
 | Priority | P3 |
-| Status | OPEN |
+| Status | RESOLVED |
 | Feature | infrastructure |
 | Requirement | REQ-NF-01 — **VIOLATED** |
 | Reproducible | ALWAYS |

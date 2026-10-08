@@ -6,7 +6,7 @@
 | Title | The home page Drafts count is always 0 |
 | Severity | Major |
 | Priority | P2 |
-| Status | OPEN |
+| Status | RESOLVED |
 | Feature | [FEAT-003](../../features/FEAT-003-public-archive/README.md) |
 | Requirement | REQ-011 — **VIOLATED** |
 | Reproducible | ALWAYS (code-verified; the page is at 0% coverage) |

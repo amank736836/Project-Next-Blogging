@@ -6,7 +6,7 @@
 | Title | Upload accepts any MIME type and any size, unauthenticated |
 | Severity | High |
 | Priority | P1 |
-| Status | OPEN |
+| Status | RESOLVED |
 | Feature | [FEAT-005](../../features/FEAT-005-image-upload/README.md) |
 | Requirement | REQ-029, REQ-NF-03 — **VIOLATED** |
 | Reproducible | ALWAYS |
