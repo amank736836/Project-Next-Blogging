@@ -6,7 +6,7 @@
 | Title | The post API has no authentication or ownership check |
 | Severity | **Critical** |
 | Priority | P0 |
-| Status | OPEN |
+| Status | RESOLVED |
 | Feature | [FEAT-002](../../features/FEAT-002-post-crud/README.md), [FEAT-001](../../features/FEAT-001-authentication/README.md) |
 | Requirement | REQ-023, REQ-025 — **VIOLATED** |
 | Reproducible | ALWAYS |

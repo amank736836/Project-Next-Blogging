@@ -6,7 +6,7 @@
 | Title | `userId` is documented as a Firebase UID and has no referential integrity |
 | Severity | Low |
 | Priority | P3 |
-| Status | OPEN |
+| Status | RESOLVED |
 | Feature | [FEAT-002](../../features/FEAT-002-post-crud/README.md) |
 | Requirement | REQ-003 — **PARTIAL** |
 | Reproducible | ALWAYS |

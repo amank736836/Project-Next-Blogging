@@ -6,7 +6,7 @@
 | Title | A non-multipart upload answers 500 instead of 400/415 |
 | Severity | Low |
 | Priority | P3 |
-| Status | OPEN |
+| Status | RESOLVED |
 | Feature | [FEAT-005](../../features/FEAT-005-image-upload/README.md) |
 | Requirement | REQ-NF-02 — **VIOLATED** |
 | Reproducible | ALWAYS |

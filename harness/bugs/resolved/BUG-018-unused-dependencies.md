@@ -6,7 +6,7 @@
 | Title | Five runtime dependencies are never imported |
 | Severity | Low |
 | Priority | P3 |
-| Status | OPEN |
+| Status | RESOLVED |
 | Feature | infrastructure |
 | Requirement | REQ-NF-01 — **VIOLATED** |
 | Reproducible | ALWAYS |

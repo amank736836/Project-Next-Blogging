@@ -188,27 +188,28 @@ describe('PostForm · create mode', () => {
     expect(await screen.findByText('hand-tuned-url-changed')).toBeInTheDocument();
   });
 
-  it('TC-NEG-010 [BUG-011] the manual slug field strips every hyphen as it is typed', async () => {
-    // BUG REGRESSION. The onInput handler pipes each keystroke through
-    // slugTransform, whose first step removes [^a-zA-Z0-9\s] — which includes
-    // "-". RHF then writes the stripped value back into the input, so a writer
-    // who clicks "edit slug" can never type a dash. The RHF `pattern` rule
-    // happily allows dashes; the input handler makes them unreachable.
-    // Asserts CURRENT behaviour so the fix fails this test and inverts it.
+  it('TC-NEG-010 [BUG-011 FIX] the manual slug field preserves hyphens as typed', async () => {
+    // Inverted from the original regression test.
+    // After the fix, the manual slug field does NOT run slugTransform on input.
+    // The writer's text is kept as-is, and the RHF pattern rule validates it.
     const user = userEvent.setup();
     render(<PostForm />);
     await userTypeTitle(user, 'Something');
     await user.click(screen.getByRole('button', { name: /edit slug/i }));
     const slugField = await screen.findByLabelText(/^slug$/i);
 
-    await user.clear(slugField);
-    await user.type(slugField, 'Not A Valid Slug!!');
-    expect(slugField).toHaveValue('notavalidslug');
-
+    // Hyphens survive typing now.
     await user.clear(slugField);
     await user.type(slugField, 'my-own-permalink');
-    expect(slugField).toHaveValue('myownpermalink');
+    expect(slugField).toHaveValue('my-own-permalink');
+    // Valid slug — no validation error.
     expect(screen.queryByText('Lowercase words, separated by dashes')).not.toBeInTheDocument();
+
+    // Invalid characters are caught by the pattern rule, not stripped silently.
+    await user.clear(slugField);
+    await user.type(slugField, 'Not A Valid Slug!!');
+    expect(slugField).toHaveValue('Not A Valid Slug!!');
+    expect(await screen.findByText('Lowercase words, separated by dashes')).toBeInTheDocument();
   });
 });
 

@@ -22,16 +22,25 @@ export default function Home() {
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState('all');
 
+  // BUG-002 fix: fetch both active and inactive posts so the Drafts
+  // filter and count actually work.
   useEffect(() => {
     if (!isLoaded || !isSignedIn) return;
     let alive = true;
-    postService
-      .getPosts()
-      .then((data) => {
-        if (alive && Array.isArray(data)) setPosts(data);
+
+    Promise.all([
+      postService.getPosts('active'),
+      postService.getPosts('inactive'),
+    ])
+      .then(([activeData, inactiveData]) => {
+        if (!alive) return;
+        const active = Array.isArray(activeData) ? activeData : [];
+        const inactive = Array.isArray(inactiveData) ? inactiveData : [];
+        setPosts([...active, ...inactive]);
       })
       .catch(() => alive && setPosts([]))
       .finally(() => alive && setLoading(false));
+
     return () => {
       alive = false;
     };
@@ -68,7 +77,7 @@ export default function Home() {
             </Reveal>
             <SplitHeadline
               as="h1"
-              text="Everyone’s frames, in one place."
+              text="Everyone's frames, in one place."
               accent="one place."
               className="mt-4 font-display text-hero-sm font-semibold tracking-[-0.03em] text-fg"
             />

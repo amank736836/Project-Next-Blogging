@@ -110,6 +110,10 @@ function PostForm({ post }) {
                         image: undefined,
                         featuredImage: uploaded.url,
                         userId: user.id,
+                        // BUG-020 fix: denormalise author display data onto the post
+                        // so the article reader can show the correct byline.
+                        authorName: user.fullName || user.username || '',
+                        authorImageUrl: user.imageUrl || '',
                     });
                     if (dbPost) router.push(`/post/${dbPost.slug}`);
                 }
@@ -210,11 +214,6 @@ function PostForm({ post }) {
                                             message: "Lowercase words, separated by dashes",
                                         },
                                     })}
-                                    onInput={(e) =>
-                                        setValue("slug", slugTransform(e.currentTarget.value), {
-                                            shouldValidate: true,
-                                        })
-                                    }
                                     error={errors.slug?.message}
                                     hint="/post/ + this — permanent once published"
                                 />

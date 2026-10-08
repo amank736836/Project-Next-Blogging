@@ -28,15 +28,21 @@ function AllPostsPage() {
     const [loading, setLoading] = useState(true);
     const [tab, setTab] = useState('all');
 
-    // Every state update happens in a callback, never synchronously in the
-    // effect body, so the render pipeline stays cascade-free.
+    // BUG-001 fix: fetch both active AND inactive posts in parallel,
+    // instead of only fetching active and trying to find drafts in the result.
     useEffect(() => {
         if (!user) return undefined;
         let alive = true;
-        postService
-            .getPosts('active', user.id)
-            .then((data) => {
-                if (alive && Array.isArray(data)) setPosts(data);
+
+        Promise.all([
+            postService.getPosts('active', user.id),
+            postService.getPosts('inactive', user.id),
+        ])
+            .then(([activeData, inactiveData]) => {
+                if (!alive) return;
+                const active = Array.isArray(activeData) ? activeData : [];
+                const inactive = Array.isArray(inactiveData) ? inactiveData : [];
+                setPosts([...active, ...inactive]);
             })
             .catch(() => {
                 if (alive) setPosts([]);
@@ -44,18 +50,19 @@ function AllPostsPage() {
             .finally(() => {
                 if (alive) setLoading(false);
             });
+
         return () => { alive = false; };
     }, [user]);
 
     const counts = useMemo(() => {
-        const active = posts.filter((p) => p.status !== 'inactive').length;
+        const active = posts.filter((p) => p.status === 'active').length;
         return { all: posts.length, active, inactive: posts.length - active };
     }, [posts]);
 
     const visible = useMemo(
         () =>
             posts
-                .filter((p) => (tab === 'all' ? true : tab === 'active' ? p.status !== 'inactive' : p.status === 'inactive'))
+                .filter((p) => (tab === 'all' ? true : tab === 'active' ? p.status === 'active' : p.status === 'inactive'))
                 .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)),
         [posts, tab]
     );

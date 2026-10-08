@@ -6,7 +6,7 @@
 | Title | `deletePost` has `try/finally` with no `catch` |
 | Severity | Low |
 | Priority | P3 |
-| Status | OPEN |
+| Status | RESOLVED |
 | Feature | [FEAT-004](../../features/FEAT-004-article-reader/README.md) |
 | Requirement | REQ-019 — **VIOLATED** |
 | Reproducible | ALWAYS (code-verified; the page is at 0% coverage) |

@@ -6,7 +6,7 @@
 | Title | No `.env.example` |
 | Severity | Low |
 | Priority | P3 |
-| Status | OPEN |
+| Status | RESOLVED |
 | Feature | infrastructure |
 | Requirement | REQ-NF-01 — **VIOLATED** |
 | Reproducible | ALWAYS |

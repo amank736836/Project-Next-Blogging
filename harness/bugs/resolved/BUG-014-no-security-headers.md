@@ -6,7 +6,7 @@
 | Title | No security headers, and the framework is advertised |
 | Severity | Medium |
 | Priority | P2 |
-| Status | OPEN |
+| Status | RESOLVED |
 | Feature | infrastructure |
 | Requirement | REQ-NF-05 — **NOT IMPLEMENTED** |
 | Reproducible | ALWAYS |

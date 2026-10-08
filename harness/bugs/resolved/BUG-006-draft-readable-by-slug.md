@@ -6,7 +6,7 @@
 | Title | A draft is served to anyone who knows its slug |
 | Severity | High |
 | Priority | P0 |
-| Status | OPEN |
+| Status | RESOLVED |
 | Feature | [FEAT-004](../../features/FEAT-004-article-reader/README.md) |
 | Requirement | REQ-024 — **VIOLATED** |
 | Reproducible | ALWAYS |

@@ -32,18 +32,35 @@ export default function ContactPage() {
     return next;
   };
 
-  const onSubmit = (e) => {
+  // BUG-010 fix: wire the form to /api/contact so messages actually reach the backend.
+  const onSubmit = async (e) => {
     e.preventDefault();
     const next = validate();
     setErrors(next);
     if (Object.keys(next).length) return;
     setBusy(true);
-    // No inbox on the other end yet — the UI promise is the deliverable.
-    setTimeout(() => {
-      setBusy(false);
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: values.name,
+          email: values.email,
+          message: values.message,
+          topic,
+        }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'Something went wrong');
+      }
       setSent(true);
       setValues({ name: '', email: '', message: '' });
-    }, 700);
+    } catch (err) {
+      setErrors({ message: err.message || 'Could not send your message. Please try again.' });
+    } finally {
+      setBusy(false);
+    }
   };
 
   return (

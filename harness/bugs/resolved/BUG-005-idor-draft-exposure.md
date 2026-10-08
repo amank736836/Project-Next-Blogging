@@ -6,7 +6,7 @@
 | Title | `?status=inactive` returns every writer's drafts to anyone |
 | Severity | **Critical** |
 | Priority | P0 |
-| Status | OPEN |
+| Status | RESOLVED |
 | Feature | [FEAT-002](../../features/FEAT-002-post-crud/README.md), [FEAT-006](../../features/FEAT-006-my-shelf/README.md) |
 | Requirement | REQ-024 — **VIOLATED** |
 | Reproducible | ALWAYS |
