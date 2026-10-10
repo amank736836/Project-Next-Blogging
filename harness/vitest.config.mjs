@@ -1,7 +1,7 @@
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
-import { transformWithEsbuild } from 'vite';
+import { transformWithOxc } from 'vite';
 
 /**
  * Harness test configuration.
@@ -33,7 +33,7 @@ export default defineConfig({
       async transform(code, id) {
         const path = id.split('?')[0];
         if (!/[\\/](src|harness)[\\/].*\.js$/.test(path)) return null;
-        return transformWithEsbuild(code, path, { loader: 'jsx', jsx: 'automatic' });
+        return transformWithOxc(code, path, { lang: 'jsx' });
       },
     },
   ],
