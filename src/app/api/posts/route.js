@@ -83,12 +83,13 @@ export async function POST(request) {
         if (body.content) body.content = sanitizeHtml(body.content);
         if (body.title) body.title = body.title.replace(/[<>]/g, "");
 
-        // BUG-004 fix: bind userId to the authenticated session,
-        // never trust the request body for userId.
-        const postData = {
-            ...body,
-            userId,
-        };
+        // Only accept editor fields. Never pass arbitrary model fields such as
+        // _id, timestamps, __v or MongoDB operators through to persistence.
+        const postData = { userId };
+        const allowedFields = ["title", "slug", "content", "featuredImage", "status", "authorName", "authorImageUrl"];
+        for (const field of allowedFields) {
+            if (Object.hasOwn(body, field)) postData[field] = body[field];
+        }
 
         // BUG-020 fix: if the body includes denormalised author data, keep it.
         // If not, the caller (PostForm) is expected to supply them.

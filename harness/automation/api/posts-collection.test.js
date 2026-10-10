@@ -194,3 +194,34 @@ describe('POST /api/posts', () => {
     expect(body.userId).toBe(USER_A); // NOT USER_B
   });
 });
+
+describe('POST security regressions', () => {
+  it('does not pass caller-controlled identifiers or internal fields to the model', async () => {
+    mockAuth.mockResolvedValue({ userId: USER_A });
+    const response = await POST(post('/api/posts', {
+      body: {
+        ...VALID_NEW_POST,
+        _id: '507f1f77bcf86cd799439011',
+        __v: 99,
+        createdAt: '2000-01-01',
+        updatedAt: '2000-01-01',
+        $set: { userId: USER_B },
+      },
+    }));
+    expect(response.status).toBe(201);
+    const payload = Post.create.mock.calls[0][0];
+    for (const field of ['_id', '__v', 'createdAt', 'updatedAt', '$set']) {
+      expect(payload).not.toHaveProperty(field);
+    }
+    expect(payload.userId).toBe(USER_A);
+  });
+
+  it('sanitizes entity-encoded executable URLs before storing content', async () => {
+    mockAuth.mockResolvedValue({ userId: USER_A });
+    const response = await POST(post('/api/posts', {
+      body: { ...VALID_NEW_POST, content: '<a href="jav&#x61;script:alert(1)">link</a>' },
+    }));
+    expect(response.status).toBe(201);
+    expect((await readJson(response)).content).toBe('<a>link</a>');
+  });
+});

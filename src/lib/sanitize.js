@@ -1,58 +1,33 @@
+import sanitize from "sanitize-html";
+
 /**
- * Server-side HTML sanitisation for post content (defence in depth).
- *
- * The authoritative sanitisation happens at render time in the browser with
- * DOMPurify (see `src/app/post/[slug]/page.js`). This module is the
- * write-time layer: it strips the obviously dangerous constructs before they
- * ever reach the database, so stored content is safer everywhere it appears
- * (previews, RSS-like consumers, future server renderers).
- *
- * Regex sanitisation is inherently best-effort — it exists to shrink the
- * attack surface, not to be the last line of defence. Known weaknesses of the
- * previous inline version that this one closes:
- *
- *   - slash-delimited event handlers:      <svg/onload=alert(1)>
- *   - whitespace before a scheme in URLs:  href=" javascript:..."
- *   - vbscript:/data:text/html schemes
- *   - <style>, <svg>, <math>, <template>, <link>, <meta>, <base> elements
- *   - unclosed <script> tags
+ * Parse HTML rather than trying to remove dangerous markup with regexes.
+ * An explicit allowlist protects stored content, including encoded/unquoted
+ * URLs and malformed tags. Browser-side DOMPurify remains defence in depth.
+ * Active embeds, inline styles, SVG and data URLs are deliberately unsupported.
  */
-
-const DANGEROUS_PAIRED = ["script", "style", "template", "svg", "math", "iframe", "object", "embed", "form"];
-const DANGEROUS_VOID = ["link", "meta", "base"];
-
 export function sanitizeHtml(html) {
-    if (!html || typeof html !== "string") return html;
+    if (typeof html !== "string") return "";
 
-    let clean = html;
-
-    // Paired dangerous elements, then any unclosed/self-closing leftovers.
-    for (const tag of DANGEROUS_PAIRED) {
-        clean = clean.replace(new RegExp(`<${tag}\\b[\\s\\S]*?<\\/${tag}\\s*>`, "gi"), "");
-        clean = clean.replace(new RegExp(`<${tag}\\b[^>]*\\/?>`, "gi"), "");
-        clean = clean.replace(new RegExp(`<\\/${tag}\\s*>`, "gi"), "");
-    }
-    for (const tag of DANGEROUS_VOID) {
-        clean = clean.replace(new RegExp(`<${tag}\\b[^>]*\\/?>`, "gi"), "");
-    }
-
-    // Event-handler attributes. `[\s/]` also catches <svg/onload=...>, where
-    // the slash plays the role of whitespace. Quoted and unquoted values.
-    clean = clean.replace(/[\s/]on\w+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi, " ");
-
-    // Dangerous URL schemes in URL-bearing attributes. Tolerates whitespace
-    // (browsers strip it when resolving URLs) between the quote and scheme.
-    clean = clean.replace(
-        /(href|src|action|formaction|xlink:href)\s*=\s*(["'])\s*(javascript|vbscript)\s*:/gi,
-        "$1=$2#"
-    );
-    // data: is only dangerous as a navigable/document type; keep data: images.
-    clean = clean.replace(
-        /(href|src|action|formaction)\s*=\s*(["'])\s*data\s*:\s*text\/html/gi,
-        "$1=$2#"
-    );
-
-    return clean;
+    return sanitize(html, {
+        allowedTags: [
+            "p", "br", "hr", "div", "span", "h1", "h2", "h3", "h4", "h5", "h6",
+            "strong", "b", "em", "i", "u", "s", "del", "sub", "sup",
+            "blockquote", "pre", "code", "ul", "ol", "li", "a", "img",
+            "figure", "figcaption", "table", "thead", "tbody", "tfoot", "tr", "th", "td",
+        ],
+        allowedAttributes: {
+            a: ["href", "title"],
+            img: ["src", "alt", "title", "width", "height"],
+            ol: ["start", "reversed"],
+            li: ["value"],
+            th: ["colspan", "rowspan", "scope"],
+            td: ["colspan", "rowspan"],
+        },
+        allowedSchemes: ["https", "http", "mailto"],
+        allowedSchemesByTag: { img: ["https", "http"] },
+        allowProtocolRelative: false,
+    });
 }
 
 export default sanitizeHtml;
