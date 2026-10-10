@@ -2,25 +2,31 @@ import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import dbConnect from "@/lib/db";
 import Post from "@/models/Post";
+import sanitizeHtml from "@/lib/sanitize";
 
 /**
- * Sanitise HTML to strip scripts and event handlers.
- * BUG-022 fix: prevent stored XSS from rendered post content.
+ * Map a thrown error to a client-facing JSON error response.
+ *
+ * BUG-013 fix: never echo driver internals (hosts, ports, stacks) to the
+ * caller. Application-level validation errors are safe to surface — they are
+ * expressed in the app's own words and only name fields the client already
+ * sends. Anything unexpected is logged server-side and answered generically.
  */
-function sanitizeHtml(html) {
-    if (!html || typeof html !== "string") return html;
-    // Strip <script> tags entirely
-    let clean = html.replace(/<script[\s\S]*?<\/script>/gi, "");
-    // Strip on* event handler attributes
-    clean = clean.replace(/\s+on\w+\s*=\s*["'][^"']*["']/gi, "");
-    clean = clean.replace(/\s+on\w+\s*=\s*[^\s>]+/gi, "");
-    // Strip javascript: URLs
-    clean = clean.replace(/href\s*=\s*["']javascript:[^"']*["']/gi, 'href="#"');
-    clean = clean.replace(/src\s*=\s*["']javascript:[^"']*["']/gi, 'src=""');
-    // Strip <iframe>, <object>, <embed>, <form> tags
-    clean = clean.replace(/<(iframe|object|embed|form)[\s\S]*?<\/\1>/gi, "");
-    clean = clean.replace(/<(iframe|object|embed|form)\s*[^>]*\/?>/gi, "");
-    return clean;
+function errorResponse(error, logPrefix) {
+    const name = error?.name;
+    if (name === "ValidationError" || name === "HarnessValidationError") {
+        return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+    // MongoDB duplicate-key (unique slug) — the fake store raises a
+    // ValidationError instead, but real Mongo raises code 11000.
+    if (error?.code === 11000) {
+        return NextResponse.json(
+            { error: "Post validation failed: slug must be unique." },
+            { status: 500 }
+        );
+    }
+    console.error(`${logPrefix}:`, error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 }
 
 export async function GET(request) {
@@ -90,11 +96,6 @@ export async function POST(request) {
         const post = await Post.create(postData);
         return NextResponse.json(post, { status: 201 });
     } catch (error) {
-        // BUG-013 fix: don't leak internal error details to the client.
-        console.error("POST /api/posts error:", error);
-        return NextResponse.json(
-            { error: "Internal server error" },
-            { status: 500 }
-        );
+        return errorResponse(error, "POST /api/posts error");
     }
 }

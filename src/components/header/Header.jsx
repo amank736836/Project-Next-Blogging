@@ -27,7 +27,14 @@ export default function Header() {
   const scrolled = y > 10;
   const hidden = scrolled && dir === 'down' && !open;
 
-  React.useEffect(() => setOpen(false), [pathname]);
+  // Close the mobile sheet when the route changes. Done during render
+  // (React's recommended "adjusting state while rendering" pattern) instead
+  // of an effect, so navigation never paints a frame with a stale open sheet.
+  const [lastPathname, setLastPathname] = React.useState(pathname);
+  if (lastPathname !== pathname) {
+    setLastPathname(pathname);
+    setOpen(false);
+  }
 
   // Lock the page while the sheet is open.
   React.useEffect(() => {

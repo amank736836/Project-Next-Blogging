@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@clerk/nextjs';
 import parse from 'html-react-parser';
+import DOMPurify from 'dompurify';
 import Image from 'next/image';
 import {
     ArrowLeft, ArrowUp, CalendarDays, Check, Clock3, Link2, Pencil, Trash2,
@@ -40,6 +41,15 @@ export default function PostPage({ params: paramsPromise }) {
         (isAuthor ? (user?.fullName || user?.username) : null) ||
         'A writer at Frame & Phrase';
     const authorInitial = authorDisplayName.trim().charAt(0).toUpperCase() || 'F';
+
+    // BUG-022 fix (render-time): the write-time regex filter in the API is
+    // best-effort only. Before turning stored HTML into React elements we run
+    // it through DOMPurify in the browser, which drops scripts, event-handler
+    // attributes, javascript:/data:text-html URLs and other active content.
+    const sanitizedContent = React.useMemo(() => {
+        if (!post?.content || typeof window === 'undefined') return '';
+        return DOMPurify.sanitize(post.content, { USE_PROFILES: { html: true } });
+    }, [post]);
 
     useEffect(() => {
         if (!slug) {
@@ -266,7 +276,7 @@ export default function PostPage({ params: paramsPromise }) {
 
                 {/* -------------------------------------------------- body */}
                 <div className="prose-fp lead mx-auto mt-12 max-w-2xl">
-                    {parse(post.content)}
+                    {parse(sanitizedContent)}
                 </div>
 
                 {/* ------------------------------------------------- outro */}

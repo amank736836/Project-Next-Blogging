@@ -13,10 +13,10 @@ where something could not be verified it is marked `UNKNOWN / REQUIRES VALIDATIO
 ## Quick start
 
 ```bash
-npm install          # 613 app packages + 148 harness devDependencies
+npm install          # 518 packages (app + harness devDependencies)
 
 npm run lint         # eslint — 0 errors, 0 warnings
-npm test             # 92 automated tests (Vitest), ~18 s, no database needed
+npm test             # 101 automated tests (Vitest), ~15 s, no database needed
 npm run test:coverage
 
 # Live server smoke test (needs a running server — see below)
@@ -114,8 +114,8 @@ stays retired rather than being reused.
 ### Run the whole suite
 
 ```bash
-npm test                 # 92 Vitest tests (api + database + ui)
-npm run test:api         # 26 tests, node environment
+npm test                 # 101 Vitest tests (api + database + ui)
+npm run test:api         # 35 tests, node environment
 npm run test:db          # 18 tests, node environment
 npm run test:ui          # 48 tests, jsdom environment
 npm run test:smoke       # 20 live checks (requires a running server)

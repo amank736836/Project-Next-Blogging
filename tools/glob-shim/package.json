@@ -1,0 +1,16 @@
+{
+  "name": "fast-glob",
+  "version": "3.3.3",
+  "description": "Minimal, security-hardened drop-in shim for fast-glob. Vendored to break the fast-glob -> micromatch -> braces dependency chain (braces has no patched release for GHSA-vfj7-8cjw-p6xm). Implements the subset of the API used by @next/eslint-plugin-next. Wire it up with an npm override.",
+  "license": "MIT",
+  "main": "index.js",
+  "files": [
+    "index.js"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "picomatch": "^4.0.7"
+  }
+}

@@ -96,9 +96,12 @@ export function installFakePersistence(Model, seed = []) {
       const index = docs.findIndex((d) => matches(d, query));
       if (index === -1) return null;
       const previous = clone(docs[index]);
-      // The real route calls this WITHOUT runValidators — deliberately kept
-      // unfaithful-to-ideal, faithful-to-code. That gap is BUG-004.
       const next = { ...docs[index], ...payload, updatedAt: new Date().toISOString() };
+      // BUG-007 fix: the route now passes `{ runValidators: true }`; honour it
+      // by validating the merged document against the real schema, exactly
+      // like Mongoose would. Without this the allow-list / enum enforcement
+      // the route asks for can never actually fire in the harness.
+      if (options.runValidators) validateAgainstRealSchema(next);
       docs[index] = next;
       return options.new === false ? previous : clone(next);
     }
