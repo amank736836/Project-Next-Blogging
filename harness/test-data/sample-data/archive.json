@@ -1,0 +1,46 @@
+[
+  {
+    "_id": "64aaaaaaaaaaaaaaaaaaaaa1",
+    "title": "Fog on the lake at six",
+    "slug": "fog-on-the-lake-at-six",
+    "content": "<p>The water stopped being water.</p>",
+    "featuredImage": "https://res.cloudinary.com/harness/image/upload/v1/blog_posts/fog.jpg",
+    "status": "active",
+    "userId": "user_harness_alice",
+    "createdAt": "2026-09-28T06:41:00.000Z",
+    "updatedAt": "2026-09-28T06:41:00.000Z"
+  },
+  {
+    "_id": "64aaaaaaaaaaaaaaaaaaaaa2",
+    "title": "Long shadows, one ridge",
+    "slug": "long-shadows-one-ridge",
+    "content": "<p>Deserts are the most honest studio.</p>",
+    "featuredImage": "https://res.cloudinary.com/harness/image/upload/v1/blog_posts/dunes.jpg",
+    "status": "active",
+    "userId": "user_harness_alice",
+    "createdAt": "2026-07-04T18:05:00.000Z",
+    "updatedAt": "2026-07-04T18:05:00.000Z"
+  },
+  {
+    "_id": "64aaaaaaaaaaaaaaaaaaaaa3",
+    "title": "Rain on the window in August",
+    "slug": "rain-on-the-window-in-august",
+    "content": "<p>The city stops asking to be photographed.</p>",
+    "featuredImage": "https://res.cloudinary.com/harness/image/upload/v1/blog_posts/rain.jpg",
+    "status": "active",
+    "userId": "user_harness_bob",
+    "createdAt": "2026-08-19T21:12:00.000Z",
+    "updatedAt": "2026-08-19T21:12:00.000Z"
+  },
+  {
+    "_id": "64aaaaaaaaaaaaaaaaaaaaa4",
+    "title": "A draft that never shipped",
+    "slug": "draft-never-shipped",
+    "content": "<p>Unfinished on purpose.</p>",
+    "featuredImage": "https://res.cloudinary.com/harness/image/upload/v1/blog_posts/draft.jpg",
+    "status": "inactive",
+    "userId": "user_harness_bob",
+    "createdAt": "2026-06-15T11:30:00.000Z",
+    "updatedAt": "2026-06-15T11:30:00.000Z"
+  }
+]

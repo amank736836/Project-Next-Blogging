@@ -1,7 +1,7 @@
 import axios from "axios";
 
 class PostService {
-    async createPost({ title, slug, content, featuredImage, status, userId }) {
+    async createPost({ title, slug, content, featuredImage, status, userId, authorName, authorImageUrl }) {
         try {
             const response = await axios.post("/api/posts", {
                 title,
@@ -9,7 +9,10 @@ class PostService {
                 content,
                 featuredImage,
                 status,
-                userId,
+                // BUG-020 fix: pass denormalised author data to the API.
+                // The server will override userId with the session user.
+                authorName,
+                authorImageUrl,
             });
             return response.data;
         } catch (error) {
@@ -81,7 +84,7 @@ class PostService {
         }
     }
 
-    // Next.js components can use use the URL directly from MongoDB/Cloudinary
+    // Next.js components can use the URL directly from MongoDB/Cloudinary
     getFilePreview(fileUrl) {
         return fileUrl;
     }
