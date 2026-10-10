@@ -110,7 +110,9 @@ function* walk(root, opts) {
 
 function expandStatic(pattern) {
   // Normalize backslashes; fast-glob treats '\' as a separator on all platforms.
-  return pattern.replace(/\\/g, '/').replace(/\/+$/, '') || '.';
+  let normalized = pattern.split('\\').join('/');
+  while (normalized.endsWith('/')) normalized = normalized.slice(0, -1);
+  return normalized || '.';
 }
 
 /**
@@ -177,7 +179,10 @@ glob.stream = stream;
 glob.generateTasks = () => {
   throw new Error('fast-glob shim: generateTasks() is not supported');
 };
-glob.escapePath = (p) => String(p).replace(/[[\]()*?!+@|]/g, '\\$&');
+glob.escapePath = (p) => {
+  const special = new Set(['[', ']', '(', ')', '*', '?', '!', '+', '@', '|']);
+  return Array.from(String(p), (character) => special.has(character) ? '\\' + character : character).join('');
+};
 glob.convertPathToPattern = toPosix;
 
 module.exports = glob;

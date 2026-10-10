@@ -30,10 +30,8 @@ export async function POST(request) {
             );
         }
 
-        // Log the message. In production, replace this with a mail API call.
-        console.log(
-            `[Contact] topic=${topic || "A bug"} from=${name} <${email}>: ${message.trim()}`
-        );
+        // Avoid logging user-controlled contact data or private details.
+        console.log("Contact form submission accepted");
 
         return NextResponse.json({ ok: true, message: "Message received" });
     } catch (error) {

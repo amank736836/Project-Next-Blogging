@@ -36,12 +36,12 @@ export async function GET(request) {
 
         // Default to only showing published (active) posts.
         const status = searchParams.get("status") || "active";
+        const { userId } = await auth();
 
         // BUG-005 fix: when the caller asks for drafts ("inactive"),
         // they MUST be authenticated and we bind userId to the session —
         // never accept userId from the query string.
         if (status === "inactive") {
-            const { userId } = await auth();
             if (!userId) {
                 return NextResponse.json(
                     { error: "Authentication required" },
