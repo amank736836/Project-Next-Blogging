@@ -19,6 +19,9 @@ function PostForm({ post }) {
     const { user } = useUser();
     const { register, handleSubmit, setValue, control, getValues, formState: { errors } } =
         useForm({
+            // Validate as the writer types so format problems (e.g. the slug
+            // pattern) surface immediately instead of only on submit.
+            mode: "onChange",
             defaultValues: {
                 title: post?.title || "",
                 slug: post?.slug || "",

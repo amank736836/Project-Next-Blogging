@@ -29,10 +29,14 @@ beforeEach(() => {
 });
 
 describe('Post schema · structure', () => {
-  it('TC-DB-001 declares exactly the six business fields plus timestamps', () => {
+  it('TC-DB-001 declares exactly the business fields plus timestamps', () => {
+    // BUG-020 fix added the denormalised author display fields
+    // (authorName, authorImageUrl) to the schema, so the contract now pins
+    // eight business fields. The test still guards against any *unexpected*
+    // field sneaking in (mass assignment surface).
     const paths = Object.keys(schema.paths).sort();
     expect(paths).toEqual(
-      ['__v', '_id', 'content', 'createdAt', 'featuredImage', 'slug', 'status', 'title', 'updatedAt', 'userId'].sort()
+      ['__v', '_id', 'authorImageUrl', 'authorName', 'content', 'createdAt', 'featuredImage', 'slug', 'status', 'title', 'updatedAt', 'userId'].sort()
     );
   });
 

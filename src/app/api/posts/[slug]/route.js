@@ -2,21 +2,29 @@ import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import dbConnect from "@/lib/db";
 import Post from "@/models/Post";
+import sanitizeHtml from "@/lib/sanitize";
 
 /**
- * Sanitise HTML to strip scripts and event handlers.
- * BUG-022 fix: prevent stored XSS from rendered post content.
+ * Map a thrown error to a client-facing JSON error response.
+ *
+ * BUG-013 fix: never echo driver internals (hosts, ports, stacks) to the
+ * caller. Application-level validation errors are safe to surface — they are
+ * expressed in the app's own words and only name fields the client already
+ * sends. Anything unexpected is logged server-side and answered generically.
  */
-function sanitizeHtml(html) {
-    if (!html || typeof html !== "string") return html;
-    let clean = html.replace(/<script[\s\S]*?<\/script>/gi, "");
-    clean = clean.replace(/\s+on\w+\s*=\s*["'][^"']*["']/gi, "");
-    clean = clean.replace(/\s+on\w+\s*=\s*[^\s>]+/gi, "");
-    clean = clean.replace(/href\s*=\s*["']javascript:[^"']*["']/gi, 'href="#"');
-    clean = clean.replace(/src\s*=\s*["']javascript:[^"']*["']/gi, 'src=""');
-    clean = clean.replace(/<(iframe|object|embed|form)[\s\S]*?<\/\1>/gi, "");
-    clean = clean.replace(/<(iframe|object|embed|form)\s*[^>]*\/?>/gi, "");
-    return clean;
+function errorResponse(error, logPrefix) {
+    const name = error?.name;
+    if (name === "ValidationError" || name === "HarnessValidationError") {
+        return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+    if (error?.code === 11000) {
+        return NextResponse.json(
+            { error: "Post validation failed: slug must be unique." },
+            { status: 500 }
+        );
+    }
+    console.error(`${logPrefix}:`, error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 }
 
 // GET a single post by slug
@@ -112,11 +120,7 @@ export async function PUT(request, { params }) {
         );
         return NextResponse.json(updated);
     } catch (error) {
-        console.error("PUT /api/posts/[slug] error:", error);
-        return NextResponse.json(
-            { error: "Internal server error" },
-            { status: 500 }
-        );
+        return errorResponse(error, "PUT /api/posts/[slug] error");
     }
 }
 
