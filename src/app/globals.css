@@ -13,6 +13,19 @@
 @import "@fontsource-variable/fraunces/wght.css";
 @import "@fontsource-variable/jetbrains-mono/index.css";
 
+/* Metric-matched fallback for the display serif. Fraunces (600) sets ~3% wider
+   than Georgia Bold, so scaling the local Georgia face to match means the swap
+   from fallback to Fraunces no longer re-wraps headlines. Without this the hero
+   headline jumped by a full line once the web font arrived (CLS ~0.3 at 768px).
+   Machines without Georgia fall through to the next family, unchanged. */
+@font-face {
+  font-family: "Fraunces Fallback";
+  src: local("Georgia Bold"), local("Georgia-Bold"), local("Georgia");
+  font-weight: 100 900;
+  font-style: normal;
+  size-adjust: 103%;
+}
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* --------------------------------------------------------------------------
@@ -54,7 +67,7 @@
 
   /* Type */
   --font-sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-display: "Fraunces Variable", ui-serif, "Iowan Old Style", Georgia, "Times New Roman", serif;
+  --font-display: "Fraunces Variable", "Fraunces Fallback", ui-serif, "Iowan Old Style", Georgia, "Times New Roman", serif;
   --font-mono: "JetBrains Mono Variable", ui-monospace, "SFMono-Regular", Menlo, monospace;
 
   --text-display-xs: clamp(1.05rem, 0.9rem + 0.4vw, 1.25rem);
@@ -101,7 +114,8 @@
   --surface-3: #e4ebf3;
   --fg: #0b1728;
   --fg-muted: #46607e;
-  --fg-faint: #7e93aa;
+  --fg-faint: #4d6179;
+  --danger-ink: #b8373c;
   --line: rgb(11 23 40 / 0.1);
   --line-strong: rgb(11 23 40 / 0.16);
   --glass: rgb(255 255 255 / 0.72);
@@ -112,7 +126,7 @@
   --aurora-3: rgb(245 182 66 / 0.22);
   --noise-opacity: 0.04;
   --noise-blend: multiply;
-  --accent: #08a8ce;
+  --accent: #066f8a;
   --accent-contrast: #ffffff;
   color-scheme: light;
 }
@@ -124,7 +138,8 @@
   --surface-3: #142740;
   --fg: #e9f0f7;
   --fg-muted: #9db3ca;
-  --fg-faint: #6d849c;
+  --fg-faint: #7d93ab;
+  --danger-ink: #ff6b6f;
   --line: rgb(180 205 229 / 0.12);
   --line-strong: rgb(180 205 229 / 0.22);
   --glass: rgb(8 18 32 / 0.66);
@@ -152,6 +167,7 @@
   --color-line-strong: var(--line-strong);
   --color-accent: var(--accent);
   --color-accent-contrast: var(--accent-contrast);
+  --color-danger-ink: var(--danger-ink);
 }
 
 /* --------------------------------------------------------------------------

@@ -51,7 +51,7 @@ const Input = React.forwardRef(function Input(
       </div>
 
       {error ? (
-        <p id={`${id}-err`} className="mt-1.5 flex items-center gap-1.5 text-xs font-medium text-[#e5484d]">
+        <p id={`${id}-err`} className="mt-1.5 flex items-center gap-1.5 text-xs font-medium text-danger-ink">
           <span aria-hidden className="inline-block h-1 w-1 rounded-full bg-[#e5484d]" />
           {error}
         </p>

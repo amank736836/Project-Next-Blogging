@@ -128,7 +128,7 @@ export default function DemoPreview() {
               <span className="inline-flex items-center gap-1.5 rounded-full border border-line px-3 py-1.5 text-xs font-semibold text-muted">
                 <Link2 className="h-3.5 w-3.5" /> Copy link
               </span>
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-line px-3 py-1.5 text-xs font-semibold text-[#e5484d]">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-line px-3 py-1.5 text-xs font-semibold text-danger-ink">
                 <Trash2 className="h-3.5 w-3.5" /> Delete
               </span>
             </div>
@@ -159,8 +159,8 @@ export default function DemoPreview() {
         title="Controls, states and loaders"
         note="Buttons in every variant, fields with validation, the ink loader, skeleton screens and the empty state — all on tokens, so they follow the theme automatically."
       >
-        <div className="grid gap-5 lg:grid-cols-2">
-          <div className="card p-6">
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+          <div className="card min-w-0 p-6">
             <span className="kicker mb-5">buttons</span>
             <div className="flex flex-wrap items-center gap-3">
               <Button variant="primary" size="sm" iconRight={<ArrowRight className="h-3.5 w-3.5" />}>Primary</Button>

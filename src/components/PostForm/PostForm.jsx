@@ -35,6 +35,7 @@ function PostForm({ post }) {
     const [confirmDelete, setConfirmDelete] = useState(false);
     const [imagePreview, setImagePreview] = useState(null);
     const [dragging, setDragging] = useState(false);
+    const [submitError, setSubmitError] = useState(null);
     const [slugTouched, setSlugTouched] = useState(Boolean(post?.slug));
     const router = useRouter();
 
@@ -94,6 +95,7 @@ function PostForm({ post }) {
 
     const submit = async (data) => {
         setLoading(true);
+        setSubmitError(null);
         try {
             const file = data.image?.[0];
 
@@ -104,25 +106,31 @@ function PostForm({ post }) {
                     image: undefined,
                     featuredImage: uploaded ? uploaded.url : post.featuredImage,
                 });
-                if (dbPost) router.push(`/post/${dbPost.slug}`);
+                if (!dbPost) throw new Error("Empty response from server");
+                router.push(`/post/${dbPost.slug}`);
             } else {
                 const uploaded = await postService.uploadFile(file);
-                if (uploaded) {
-                    const dbPost = await postService.createPost({
-                        ...data,
-                        image: undefined,
-                        featuredImage: uploaded.url,
-                        userId: user.id,
-                        // BUG-020 fix: denormalise author display data onto the post
-                        // so the article reader can show the correct byline.
-                        authorName: user.fullName || user.username || '',
-                        authorImageUrl: user.imageUrl || '',
-                    });
-                    if (dbPost) router.push(`/post/${dbPost.slug}`);
-                }
+                if (!uploaded) throw new Error("Image upload returned no file");
+                const dbPost = await postService.createPost({
+                    ...data,
+                    image: undefined,
+                    featuredImage: uploaded.url,
+                    userId: user.id,
+                    // BUG-020 fix: denormalise author display data onto the post
+                    // so the article reader can show the correct byline.
+                    authorName: user.fullName || user.username || '',
+                    authorImageUrl: user.imageUrl || '',
+                });
+                if (!dbPost) throw new Error("Empty response from server");
+                router.push(`/post/${dbPost.slug}`);
             }
         } catch (error) {
             console.error("PostForm :: submit :: error", error);
+            setSubmitError(
+                error?.response?.status === 401
+                    ? "Your session has expired. Log in again, then retry."
+                    : "We could not save your story. Check your connection and try again."
+            );
             setLoading(false);
         }
     };
@@ -161,6 +169,7 @@ function PostForm({ post }) {
             if (status) router.push("/");
         } catch (error) {
             console.error("PostForm :: deletePost :: error", error);
+            setSubmitError("We could not delete this story. Try again in a moment.");
             setDeleting(false);
             setConfirmDelete(false);
         }
@@ -267,7 +276,7 @@ function PostForm({ post }) {
                             defaultValue={getValues("content")}
                         />
                         {errors.content?.message && (
-                            <p className="mt-2 px-3 text-xs font-medium text-[#e5484d]">{errors.content.message}</p>
+                            <p className="mt-2 px-3 text-xs font-medium text-danger-ink">{errors.content.message}</p>
                         )}
                     </div>
                 </div>
@@ -335,7 +344,7 @@ function PostForm({ post }) {
                     </div>
 
                     {errors.image?.message && (
-                        <p className="mt-2 text-xs font-medium text-[#e5484d]">{errors.image.message}</p>
+                        <p className="mt-2 text-xs font-medium text-danger-ink">{errors.image.message}</p>
                     )}
                 </div>
 
@@ -353,6 +362,14 @@ function PostForm({ post }) {
                 </div>
 
                 <div data-rise className="space-y-2.5">
+                    {submitError && (
+                        <p
+                            role="alert"
+                            className="rounded-xl border border-danger-ink/30 bg-danger-ink/8 px-4 py-3 text-sm font-medium text-danger-ink"
+                        >
+                            {submitError}
+                        </p>
+                    )}
                     <Button
                         type="submit"
                         className="w-full"
@@ -376,10 +393,10 @@ function PostForm({ post }) {
                         type="button"
                         variant="ghost"
                         className="w-full"
-                        onClick={() => router.back()}
+                        onClick={handleSubmit((data) => submit({ ...data, status: "inactive" }))}
                         disabled={loading}
                     >
-                        Keep as draft, leave for now
+                        Save as draft
                     </Button>
 
                     {post && (
@@ -390,7 +407,7 @@ function PostForm({ post }) {
                             className={`flex w-full items-center justify-center gap-2 rounded-full border px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.14em] transition-all duration-300 ${
                                 confirmDelete
                                     ? "border-transparent bg-[#e5484d] text-white"
-                                    : "border-line text-[#e5484d] hover:border-[#e5484d]/50"
+                                    : "border-line text-danger-ink hover:border-[#e5484d]/50"
                             }`}
                         >
                             {deleting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-3.5 w-3.5" />}

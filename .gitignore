@@ -47,3 +47,6 @@ next-env.d.ts
 /harness/evidence/**/*.jpg
 /harness/evidence/**/*.mp4
 /harness/evidence/**/*.webm
+
+# Playwright QA run output (screenshots, traces, JSON results)
+/harness/test-results/playwright/

@@ -207,7 +207,7 @@ function Subscribe() {
       </div>
       <p
         className={`mt-2 text-xs text-faint transition-all duration-500 ${
-          state === 'sent' ? 'translate-y-0 opacity-100' : 'translate-y-1 opacity-70'
+          state === 'sent' ? 'translate-y-0 opacity-100' : 'translate-y-1 opacity-100'
         }`}
       >
         {state === 'sent'

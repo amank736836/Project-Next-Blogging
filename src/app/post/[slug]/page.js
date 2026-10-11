@@ -57,16 +57,15 @@ export default function PostPage({ params: paramsPromise }) {
             return;
         }
         let alive = true;
+        // A missing or failed post falls through to the "not on the shelf"
+        // state below instead of silently bouncing the reader to the home page.
         postService
             .getPost(slug)
             .then((data) => {
-                if (!alive) return;
-                if (data) setPost(data);
-                else router.push('/');
+                if (alive && data) setPost(data);
             })
             .catch((err) => {
                 console.error('Failed to fetch post:', err);
-                if (alive) router.push('/');
             })
             .finally(() => alive && setLoading(false));
         return () => { alive = false; };
@@ -130,7 +129,6 @@ export default function PostPage({ params: paramsPromise }) {
     if (!post) {
         return (
             <div className="flex min-h-[60vh] flex-col items-center justify-center gap-5 text-center">
-                <Loader className="text-accent" size={34} />
                 <p className="text-muted">That frame is not on the shelf.</p>
                 <Button href="/" size="md" variant="ghost" iconLeft={<ArrowLeft className="h-4 w-4" />}>
                     Back to the archive
@@ -253,7 +251,7 @@ export default function PostPage({ params: paramsPromise }) {
                                     className={`btn !py-2 text-xs transition-colors duration-300 ${
                                         confirming
                                             ? 'btn-danger'
-                                            : 'btn-ghost glass text-[#e5484d]'
+                                            : 'btn-ghost glass text-danger-ink'
                                     }`}
                                 >
                                     {deleting ? (
@@ -269,7 +267,7 @@ export default function PostPage({ params: paramsPromise }) {
                 </Reveal>
 
                 {deleteError && (
-                    <div className="mx-auto mt-4 max-w-2xl rounded-lg border border-[#e5484d]/30 bg-[#e5484d]/8 px-4 py-3 text-sm text-[#e5484d]">
+                    <div className="mx-auto mt-4 max-w-2xl rounded-lg border border-[#e5484d]/30 bg-[#e5484d]/8 px-4 py-3 text-sm text-danger-ink">
                         {deleteError}
                     </div>
                 )}

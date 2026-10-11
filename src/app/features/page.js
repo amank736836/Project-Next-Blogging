@@ -87,8 +87,8 @@ export default function FeaturesPage() {
 
             <ul className="grid gap-3 sm:grid-cols-2">
               {STACK.map(([name, note], i) => (
-                <Reveal key={name} delay={(i % 2) * 0.06} y={20}>
-                  <li className="group flex h-full items-start gap-3 rounded-2xl border border-line bg-surface-1/70 p-4 transition-all duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-0.5 hover:border-accent/40">
+                <Reveal as="li" key={name} delay={(i % 2) * 0.06} y={20}>
+                  <div className="group flex h-full items-start gap-3 rounded-2xl border border-line bg-surface-1/70 p-4 transition-all duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-0.5 hover:border-accent/40">
                     <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-accent/14 text-accent">
                       <Check className="h-3.5 w-3.5" strokeWidth={2.4} />
                     </span>
@@ -98,7 +98,7 @@ export default function FeaturesPage() {
                       </span>
                       <span className="mt-1 block text-[0.9rem] leading-relaxed text-muted">{note}</span>
                     </span>
-                  </li>
+                  </div>
                 </Reveal>
               ))}
             </ul>

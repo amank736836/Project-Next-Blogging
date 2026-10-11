@@ -15,7 +15,7 @@ const CHANNELS = [
   { Icon: MapPin, label: 'Bengaluru, IN', note: 'GMT+5, mostly awake', href: null },
 ];
 
-const TOPICS = ['A bug', 'A idea', 'Billing', 'Something else'];
+const TOPICS = ['A bug', 'An idea', 'Billing', 'Something else'];
 
 export default function ContactPage() {
   const [sent, setSent] = useState(false);
@@ -197,7 +197,7 @@ export default function ContactPage() {
                       aria-invalid={errors.message ? 'true' : undefined}
                     />
                     {errors.message && (
-                      <p className="mt-1.5 text-xs font-medium text-[#e5484d]">{errors.message}</p>
+                      <p className="mt-1.5 text-xs font-medium text-danger-ink">{errors.message}</p>
                     )}
                   </div>
 

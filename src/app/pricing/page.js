@@ -238,12 +238,14 @@ export default function PricingPage() {
 
 function Accordion({ q, a }) {
   const [open, setOpen] = React.useState(false);
+  const panelId = React.useId();
   return (
     <div>
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
+        aria-controls={panelId}
         className="group flex w-full items-center justify-between gap-6 px-5 py-4 text-left transition-colors duration-300 hover:bg-accent/6 sm:px-6"
       >
         <span className="font-display text-[1.05rem] font-medium tracking-tight text-fg">{q}</span>
@@ -256,6 +258,8 @@ function Accordion({ q, a }) {
       </button>
       {/* grid-rows animation: no measuring, no layout jank */}
       <div
+        id={panelId}
+        inert={!open}
         className={`grid transition-[grid-template-rows,opacity] duration-500 ease-[cubic-bezier(.16,1,.3,1)] ${
           open ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
         }`}
