@@ -3,6 +3,7 @@ import { ThemeProvider } from "@/hooks/theme-context";
 import { Header, Footer } from "@/components";
 import { ClerkProvider } from '@clerk/nextjs'
 import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import Ambient from "@/components/ui/Ambient";
 import ScrollProgress from "@/components/ui/ScrollProgress";
 import PageShell from "@/components/ui/PageShell";
@@ -71,6 +72,7 @@ export default function RootLayout({ children }) {
             </div>
           </ThemeProvider>
           <Analytics />
+          <SpeedInsights />
         </body>
       </html>
     </ClerkProvider>
