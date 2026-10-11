@@ -72,7 +72,7 @@ export default function HowItWorks() {
             </p>
             <Link
               href="/features"
-              className="group mt-8 inline-flex items-center gap-2 text-sm font-semibold text-accent"
+              className="group mt-8 inline-flex min-h-6 items-center gap-2 text-sm font-semibold text-accent"
             >
               <span className="link-line">See the full feature list</span>
               <ArrowRight className="h-4 w-4 transition-transform duration-500 ease-[cubic-bezier(.16,1,.3,1)] group-hover:translate-x-1" />
@@ -143,7 +143,7 @@ function Step({ Icon, title, body, meta, index }) {
           <span className="font-mono text-[0.62rem] uppercase tracking-[0.24em] text-faint">
             step {String(index + 1).padStart(2, '0')}
           </span>
-          <span className="font-mono text-[0.62rem] text-accent/80">{meta}</span>
+          <span className="font-mono text-[0.62rem] text-accent">{meta}</span>
         </div>
         <h3 className="mt-1.5 font-display text-[1.35rem] font-semibold tracking-tight text-fg">
           {title}

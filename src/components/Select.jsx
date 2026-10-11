@@ -11,7 +11,7 @@ function Select({ options = [], label, className = '', error, ...props }, ref) {
           {label}
         </label>
       )}
-      <div className="relative">
+      <div className="group relative">
         <select
           {...props}
           id={id}
@@ -30,7 +30,7 @@ function Select({ options = [], label, className = '', error, ...props }, ref) {
         <svg
           aria-hidden
           viewBox="0 0 24 24"
-          className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-faint transition-transform duration-300 ease-[cubic-bezier(.16,1,.3,1)] peer-focus:rotate-180 focus-within:rotate-180"
+          className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-faint transition-transform duration-300 ease-[cubic-bezier(.16,1,.3,1)] group-focus-within:rotate-180"
           fill="none"
           stroke="currentColor"
           strokeWidth="2"
@@ -40,7 +40,7 @@ function Select({ options = [], label, className = '', error, ...props }, ref) {
           <path d="M6 9l6 6 6-6" />
         </svg>
       </div>
-      {error && <p className="mt-1.5 text-xs font-medium text-[#e5484d]">{error}</p>}
+      {error && <p className="mt-1.5 text-xs font-medium text-danger-ink">{error}</p>}
     </div>
   );
 }

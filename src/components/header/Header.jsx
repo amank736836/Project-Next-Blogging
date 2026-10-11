@@ -84,7 +84,7 @@ export default function Header() {
         className="site-header sticky top-0 z-50 border-b border-transparent"
       >
         <Container size="xl">
-          <div className="flex h-16 items-center justify-between gap-4 md:h-[4.25rem]">
+          <div className="flex h-16 items-center justify-between gap-2 sm:gap-4 md:h-[4.25rem]">
             {/* brand */}
             <Link
               href="/"
@@ -186,8 +186,10 @@ export default function Header() {
       {/* mobile sheet */}
       <div
         id="mobile-nav"
-        className={`fixed inset-x-0 top-16 z-40 origin-top px-4 pb-4 transition-[opacity,transform] duration-500 ease-[cubic-bezier(.16,1,.3,1)] lg:hidden ${
-          open ? 'pointer-events-auto translate-y-0 opacity-100' : 'pointer-events-none -translate-y-3 opacity-0'
+        className={`fixed inset-x-0 top-16 z-40 origin-top px-4 pb-4 transition-[opacity,transform,visibility] duration-500 ease-[cubic-bezier(.16,1,.3,1)] md:top-[4.25rem] lg:hidden ${
+          open
+            ? 'pointer-events-auto visible translate-y-0 opacity-100'
+            : 'pointer-events-none invisible -translate-y-3 opacity-0'
         }`}
       >
         <div className="glass rounded-3xl p-3 shadow-lift">

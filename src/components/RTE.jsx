@@ -56,7 +56,7 @@ export default function RTE({ name, control, label, defaultValue = "" }) {
                 body p { margin-block: 0.9em; }
                 body blockquote { border-left: 2px solid #22c6ea; margin-left: 0; padding-left: 1rem; font-family: Fraunces, Georgia, serif; font-style: italic; }
                 body img { border-radius: 12px; max-width: 100%; }
-                body a { color: #08a8ce; }
+                body a { color: #066f8a; }
                 body ::selection { background: rgba(34,198,234,.28); }
               `,
                             body_class: 'fp-editor-body',

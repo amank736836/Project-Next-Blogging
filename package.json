@@ -13,7 +13,8 @@
     "test:api": "vitest run --config harness/vitest.config.mjs harness/automation/api",
     "test:ui": "vitest run --config harness/vitest.config.mjs harness/automation/ui",
     "test:db": "vitest run --config harness/vitest.config.mjs harness/automation/database",
-    "test:smoke": "node harness/automation/scripts/api-smoke.mjs"
+    "test:smoke": "node harness/automation/scripts/api-smoke.mjs",
+    "test:e2e": "playwright test -c harness/playwright.config.mjs"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.37.4",
@@ -31,7 +32,7 @@
     "mongoose": "^9.7.2",
     "next": "16.4.0",
     "react": "19.3.0",
-    "react-dom": "19.2.3",
+    "react-dom": "19.3.0",
     "react-hook-form": "^7.71.1",
     "sanitize-html": "^2.18.0"
   },
@@ -39,6 +40,8 @@
     "fast-glob": "file:tools/glob-shim"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
+    "@playwright/test": "1.64.0",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.3",

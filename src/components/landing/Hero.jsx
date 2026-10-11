@@ -58,7 +58,7 @@ export default function Hero() {
                 </Button>
                 <a
                   href="#how"
-                  className="group ml-1 inline-flex items-center gap-2 text-sm font-semibold text-muted transition-colors duration-300 hover:text-accent"
+                  className="group ml-1 inline-flex min-h-6 items-center gap-2 text-sm font-semibold text-muted transition-colors duration-300 hover:text-accent"
                 >
                   <PlayCircle className="h-5 w-5 transition-transform duration-500 ease-[cubic-bezier(.16,1,.3,1)] group-hover:scale-110" />
                   <span className="link-line">2-minute tour</span>
@@ -150,9 +150,9 @@ export default function Hero() {
                       </span>
                       <span className="text-[0.7rem] font-medium text-muted">4 min</span>
                     </div>
-                    <h3 className="mt-2.5 font-display text-[1.35rem] font-semibold leading-snug tracking-tight text-fg">
+                    <p className="mt-2.5 font-display text-[1.35rem] font-semibold leading-snug tracking-tight text-fg">
                       The morning the fog lifted, I finally wrote it down
-                    </h3>
+                    </p>
                     <div className="mt-4 flex items-center gap-2.5">
                       <span className="grid h-7 w-7 place-items-center rounded-full bg-accent/14 text-accent">
                         <Feather className="h-3.5 w-3.5" />

@@ -22,7 +22,7 @@ export default function ErrorBoundary({ error, reset }) {
             duration={1}
             strokeWidth="2.2"
             strokeLinecap="round"
-            className="mx-auto h-14 w-14 text-[#e5484d]"
+            className="mx-auto h-14 w-14 text-danger-ink"
             aria-hidden
           >
             <circle cx="32" cy="32" r="27" stroke="currentColor" opacity="0.4" />
