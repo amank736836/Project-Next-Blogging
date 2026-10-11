@@ -1,6 +1,7 @@
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
+import { transformWithOxc } from 'vite';
 
 /**
  * Harness test configuration.
@@ -24,8 +25,18 @@ export default defineConfig({
   // (e.g. src/app/contact/page.js, src/app/page.js). Vite only treats `.jsx`
   // as JSX by default, so both the React plugin and esbuild are told to parse
   // `.js` as JSX too. Nothing under src/ is renamed to make the tests work.
-  plugins: [react({ include: /[\\/](src|harness)[\\/].*\.[cm]?[jt]sx?$/ })],
-  esbuild: { loader: 'jsx', include: /[\\/](src|harness)[\\/].*\.[cm]?[jt]sx?$/, exclude: [] },
+  plugins: [
+    react({ include: /[\\/](src|harness)[\\/].*\.[cm]?[jt]sx?$/ }),
+    {
+      name: 'jsx-in-js-for-tests',
+      enforce: 'pre',
+      async transform(code, id) {
+        const path = id.split('?')[0];
+        if (!/[\\/](src|harness)[\\/].*\.js$/.test(path)) return null;
+        return transformWithOxc(code, path, { lang: 'jsx' });
+      },
+    },
+  ],
   optimizeDeps: { esbuildOptions: { loader: { '.js': 'jsx' } } },
   resolve: {
     // Array form + anchored regexes: the app alias `@/` mirrors jsconfig.json,
