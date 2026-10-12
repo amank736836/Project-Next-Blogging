@@ -31,7 +31,7 @@
     "mongoose": "^9.7.2",
     "next": "16.4.0",
     "react": "19.3.0",
-    "react-dom": "19.2.3",
+    "react-dom": "19.3.0",
     "react-hook-form": "^7.71.1",
     "sanitize-html": "^2.18.0"
   },

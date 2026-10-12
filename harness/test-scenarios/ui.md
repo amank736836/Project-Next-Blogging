@@ -87,8 +87,9 @@ for why, and what that means for the results.
 | SCN-UI-47 | Keyboard-only traversal of the composer | NOT_EXECUTED | Needs a browser for meaningful focus assertions |
 | SCN-UI-48 | Colour contrast in both themes | BLOCKED | No browser |
 | SCN-UI-49 | Responsive breakpoints | BLOCKED | jsdom has no layout |
+| SCN-UI-50 | A scroll reveal re-measures on mount, on route change and when the document height moves — [BUG-023](../bugs/resolved/BUG-023-blank-footer-after-navigation.md) | AUTOMATED | TC-UI-038…041 |
 
-**37 of 49 automated.**
+**38 of 50 automated.**
 
 ## Accessibility assertions that *are* made
 

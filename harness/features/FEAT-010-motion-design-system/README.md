@@ -31,10 +31,14 @@ Existing Tests: No direct tests. Exercised indirectly: the entire DOM suite runs
                 of components importing it.
 Missing Tests:  splitWords() — a pure exported function that is trivially testable and is
                 not tested. MOTION constants. gsapOnce() idempotence.
+                Covered since BUG-023: useScrollTriggerRefresh, the hook that owns
+                re-measurement (TC-UI-038…041, GSAP mocked there).
                 useCountUp, useInView, useMagnetic, usePointerVars, useScrollInfo — all
                 need a real layout engine.
                 Every visual outcome: parallax depth, tilt, marquee speed, reveal stagger.
-Known Issues:   None filed.
+Known Issues:   [BUG-023](../../bugs/resolved/BUG-023-blank-footer-after-navigation.md) —
+                resolved. Scroll triggers kept the previous page's offsets, so the footer's
+                contents never painted on any route reached by a link.
 Status:         IMPLEMENTED — UNTESTED, and largely untestable without a browser.
 ```
 

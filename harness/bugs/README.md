@@ -1,8 +1,9 @@
 # Bug register
 
-21 open, 0 resolved. Found by reading the source and by executing the suites — no bug here
-is speculative. Every entry names the file and line it was found in, and every one that has
-a test says which.
+21 open, 2 resolved. Found by reading the source, by executing the suites, and — for
+BUG-023 — by driving the application in a headless browser. No bug here is speculative.
+Every entry names the file and line it was found in, and every one that has a test says
+which.
 
 ## Severity scale used
 
@@ -48,8 +49,13 @@ a test says which.
 
 ## Resolved
 
-Nothing. [resolved/](resolved/) is empty because no fix has been made — this harness was
-built without modifying `src/`.
+| ID | Summary | Severity | Feature | Fixed in | Test |
+| --- | --- | --- | --- | --- | --- |
+| [BUG-023](resolved/BUG-023-blank-footer-after-navigation.md) | Scroll triggers keep the previous page's offsets, so the footer renders blank | Major | FEAT-010 | `useScrollTriggerRefresh(deps)` re-measures on route change and on document-height change | TC-UI-038…041 |
+| [BUG-024](resolved/BUG-024-react-dom-version-mismatch.md) | `react-dom` was pinned one minor below `react`, so the whole suite failed to import | Medium | infrastructure | `react-dom@19.3.0` | the suite itself (115 cases) |
+
+Both were found by running the application, not by reading it: BUG-023 in headless Chromium
+and BUG-024 by trying to add BUG-023's regression test. See [resolved/](resolved/).
 
 ## Priority, and the order to fix things
 
@@ -72,6 +78,9 @@ Suggested order:
 5. **BUG-001 + BUG-002 + BUG-003 + BUG-011 + BUG-010** — the visible feature defects.
 6. Everything Low.
 
+BUG-023 was fixed ahead of that order because it was reported by a user: it hides the
+footer on every page except the home page.
+
 ## Regression-test policy
 
 Every bug fixed from here must land with its regression test inverted, not deleted.
@@ -81,6 +90,7 @@ Every bug fixed from here must land with its regression test inverted, not delet
 | BUG-004…008, BUG-022 | The `TC-SEC-*` case currently asserts the *defective* behaviour. Rewrite the assertion to expect `401`/`403`/`415`. It will go red the moment the fix lands — that is the design, not a mistake. |
 | BUG-010 | `TC-UI-012` asserts zero network calls. Once a backend exists, invert it to assert one. |
 | BUG-011 | `TC-NEG-010` asserts hyphens are stripped. Invert to assert they survive. |
+| BUG-023 | Its test asserts the re-measurement contract (mount, `deps` change, document-height change, detached triggers) — leave it asserting that. It does **not** cover the fire-once race on a fast jump; see the note at the end of the bug file. |
 | BUG-001, BUG-002, BUG-003, BUG-012, BUG-017, BUG-021 | No test exists yet. **Write one before fixing** — otherwise the fix is unverifiable. The three Major UI bugs are the most important of these, because they are the ones a user would actually notice. |
 
 ## Writing a new bug report

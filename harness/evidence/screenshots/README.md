@@ -1,6 +1,22 @@
 # Screenshots
 
-**This directory is empty. No screenshot was taken and none was fabricated.**
+**2026-10-11 — a browser was available for the BUG-023 investigation.** Headless Chromium 153
+(`@sparticuz/chromium` + `puppeteer-core`) was run against `next dev` at 1568 × 946 and
+1568 × 757. It is the first execution in this harness that could see layout or paint, and it
+found something no DOM test could: the footer's contents stayed at `opacity: 0` after a
+client-side navigation — [BUG-023](../../bugs/resolved/BUG-023-blank-footer-after-navigation.md).
+The measurements are recorded as numbers inside that bug file, because `.png` is gitignored
+here by design.
+
+What the run also settled: every route renders with **zero broken images** (0 of the `<img>`
+elements on `/`, `/contact`, `/pricing`, `/features`, `/terms`, `/privacy`, `/all-posts`,
+`/demo`, `/login`, `/signup` and the 404), and each route's document height is stable across
+a revisit. Every console error seen was traceable to the placeholder Clerk key used for the
+run (`clerk.example.com` does not resolve, so `clerk.browser.js` and `/v1/script.debug.js`
+fail) — that is the harness's own placeholder, not an application defect.
+
+**Everything below describes the state before that run.** No screenshot was taken for the
+runs this harness was originally built on, and none of those claims have been retro-fitted.
 
 There is no browser available in the environment where this harness was built — no
 Chromium, no Playwright, no Puppeteer. Every visual claim in this harness is therefore one

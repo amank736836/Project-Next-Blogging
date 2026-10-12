@@ -85,23 +85,65 @@ export function useMotionEffect(build, deps = []) {
   return { ref, reduced };
 }
 
-/** Refresh ScrollTrigger once fonts and images have settled. */
-export function useScrollTriggerRefresh() {
+/**
+ * Keep every ScrollTrigger honest.
+ * -------------------------------------------------------------------------
+ * A trigger caches the start/end offsets it measured when it was created, so
+ * anything that changes the document height afterwards leaves those numbers
+ * wrong. The footer is the loudest example: it lives in the layout, so its
+ * triggers survive every route change holding the *previous* page's offsets —
+ * and a trigger whose start sits past the end of the page can never fire, which
+ * is how a reveal ends up permanently invisible (a band of blank page where the
+ * footer's brand block and link columns should be).
+ *
+ * So we re-measure on mount, on every `deps` change (pass the pathname), once
+ * fonts/images have settled, and whenever the document height moves under us —
+ * async posts, images and route swaps all land in that last bucket.
+ *
+ * @param {unknown[]} deps re-run the measurements when these change
+ */
+export function useScrollTriggerRefresh(deps = []) {
   useEffect(() => {
-    if (!gsapOnce()) return;
+    if (!gsapOnce()) return undefined;
     let raf = 0;
-    const refresh = () => {
+    let height = 0;
+
+    const measure = () => {
       cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => ScrollTrigger.refresh());
+      raf = requestAnimationFrame(() => {
+        // Triggers belonging to a route we already left (or to a node that was
+        // swapped out) still exist in the plugin's list and drag the page's
+        // metrics with them. Drop them before re-measuring.
+        ScrollTrigger.getAll().forEach((trigger) => {
+          const node = trigger.trigger;
+          if (node && node.isConnected === false) trigger.kill();
+        });
+        height = document.documentElement.scrollHeight;
+        ScrollTrigger.refresh();
+      });
     };
-    refresh();
-    window.addEventListener('load', refresh, { once: true });
-    document.fonts?.ready?.then(refresh).catch(() => {});
+
+    measure();
+    window.addEventListener('load', measure, { once: true });
+    document.fonts?.ready?.then(measure).catch(() => {});
+
+    const observer =
+      typeof ResizeObserver === 'undefined'
+        ? null
+        : new ResizeObserver(() => {
+            if (document.documentElement.scrollHeight === height) return;
+            measure();
+          });
+    observer?.observe(document.documentElement);
+
     return () => {
       cancelAnimationFrame(raf);
-      window.removeEventListener('load', refresh);
+      window.removeEventListener('load', measure);
+      observer?.disconnect();
     };
-  }, []);
+    // `deps` is the caller's explicit contract for when to re-measure.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, deps);
 }
 
 /** Split text into words (and chars) for expressive type reveals. */

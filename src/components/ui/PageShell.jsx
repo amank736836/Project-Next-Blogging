@@ -13,8 +13,10 @@ export default function PageShell({ children }) {
   const content = React.useRef(null);
   const sweep = React.useRef(null);
 
-  // Keep every ScrollTrigger on the page honest after fonts/images settle.
-  useScrollTriggerRefresh();
+  // Keep every ScrollTrigger on the page honest: the footer (and anything else
+  // outside this subtree) holds triggers created on the *previous* route, so
+  // they have to be re-measured for the page we are actually on now.
+  useScrollTriggerRefresh([pathname]);
 
   const { ref } = useMotionEffect(
     (g) => {
