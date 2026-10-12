@@ -6,6 +6,15 @@ This page is the fast answer to *"where are we?"*. Detail lives in
 [reports/](reports/). Everything below was produced by an execution recorded in
 [test-results/latest/](test-results/latest/).
 
+> **Since this snapshot (2026-10-11):** the suite was re-run on a checkout of `master` after
+> two fixes. It is **12 files / 115 cases, all passing**, plus a headless-Chromium run that
+> is the first visual evidence in this harness.
+> The two changes: [BUG-024](bugs/resolved/BUG-024-react-dom-version-mismatch.md) — the suite
+> could not load at all, because `react-dom` was pinned one minor below `react`; and
+> [BUG-023](bugs/resolved/BUG-023-blank-footer-after-navigation.md) — the footer's contents
+> never painted on any page reached by a link, which no jsdom test could have seen.
+> The rest of this page is left as the snapshot it claims to be.
+
 ---
 
 ## At a glance

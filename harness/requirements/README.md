@@ -33,6 +33,7 @@ Requirements are grouped by theme for navigation:
 | Theme | REQ-013 |
 | Marketing, legal, 404, demo | REQ-018, REQ-019, REQ-022 |
 | Authorisation & input safety (all unmet) | REQ-023…REQ-026, REQ-NF-02…05 |
+| Shared chrome | REQ-030 |
 | Shelf | REQ-028 |
 | Operational | REQ-NF-01, REQ-NF-09…12 |
 
