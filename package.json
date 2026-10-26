@@ -34,7 +34,7 @@
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "react-hook-form": "^7.71.1",
-    "sanitize-html": "^2.18.0"
+    "sanitize-html": "^2.18.1"
   },
   "overrides": {
     "fast-glob": "file:tools/glob-shim"
